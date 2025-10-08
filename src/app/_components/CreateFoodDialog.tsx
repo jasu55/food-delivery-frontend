@@ -47,6 +47,7 @@ export const CreateFoodDialog = () => {
     const previewUrl = file ? URL.createObjectURL(file) : undefined;
     setPreview(previewUrl);
   }
+
   return (
     <div>
       <Dialog>
