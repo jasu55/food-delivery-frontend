@@ -8,7 +8,15 @@ export default function Page() {
   const [categories, setCategories] = useState<string[]>([]);
 
   const getCategories = async () => {
-    const result = await fetch("http://localhost:3000/categories");
+    const result = await fetch("http://localhost:4000/api/categories", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!result.ok) {
+      throw new Error("Failed to fetch categories");
+    }
     const responseData = await result.json();
     const { data } = responseData;
     setCategories(data);
