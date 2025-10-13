@@ -1,14 +1,14 @@
 "use client";
-import { Badge } from "@/components/ui/badge";
 import { CreateFoodDialog } from "./_components/CreateFoodDialog";
+import { Button } from "@/components/ui/button"; // Adjust the path if necessary
 import { AdminLayout } from "./AdminLayout";
 import { useEffect, useState } from "react";
 
 export default function Page() {
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories, setCategories] = useState<{ name: string }[]>([]);
 
   const getCategories = async () => {
-    const result = await fetch("http://localhost:4000/api/categories", {
+    const result = await fetch("http://localhost:8080/api/categories", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -19,7 +19,7 @@ export default function Page() {
     }
     const responseData = await result.json();
     const { data } = responseData;
-    setCategories(data);
+    setCategories(data.map((item: any) => ({ name: item.name })));
     return data;
   };
 
@@ -27,18 +27,28 @@ export default function Page() {
     getCategories();
   }, []);
 
+  console.log(categories);
+
   return (
     <div className="h-screen w-screen bg-gray-100">
       <AdminLayout>
-        <div>
-          {categories.map((category: any) => (
-            <Badge variant="outline" key={category.id}>
-              {category.name}
-            </Badge>
-          ))}
-          <div>
-            <h1>Pizza (5)</h1>
-            {CreateFoodDialog()}
+        <div className="h-[176px] w-screen bg-[#FFFFFF] rounded-md ml-[24px] mt-[24px] p-[24px]">
+          <div className="font-bold text-[20px]  pt-[24px]">
+            Dishes category
+          </div>
+          <div className="mt-[16px] flex gap-2">
+            {categories.map((category, index) => (
+              <Button
+                className="bg-white text-black rounded-full border-1 border-black "
+                key={index}
+              >
+                {category.name}
+                <p className="bg-black text-white rounded-full  px-2">
+                  {categories.length}
+                </p>
+              </Button>
+            ))}
+            <div>{CreateFoodDialog()}</div>
           </div>
         </div>
       </AdminLayout>

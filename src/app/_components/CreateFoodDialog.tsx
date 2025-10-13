@@ -15,7 +15,7 @@ import { useState } from "react";
 export const CreateFoodDialog = () => {
   const [preview, setPreview] = useState<string | undefined>();
   const [name, setName] = useState<string>("Type food name");
-  const [price, setPrice] = useState<number>(0);
+  const [price, setPrice] = useState<number>();
 
   const addFoodHandler = () => {
     fetch("http://localhost:3000/create-food", {
@@ -71,9 +71,9 @@ export const CreateFoodDialog = () => {
               <Input
                 id="Food name"
                 name="Food name"
-                defaultValue="Enter food name..."
                 value={name}
                 onChange={nameChangeHandler}
+                placeholder=""
               />
             </div>
             <div className="w-full flex flex-col gap-2">
@@ -81,18 +81,19 @@ export const CreateFoodDialog = () => {
               <Input
                 id="price"
                 name="price"
-                defaultValue="0"
-                value={price}
+                type="number"
+                value={price || ""}
                 onChange={priceChangeHandler}
+                placeholder="Enter price..."
               />
             </div>
           </div>
           <div className="w-full flex flex-col gap-2">
             <Label htmlFor="Food description">Ingredients</Label>
             <Textarea
+              placeholder="List ingredients..."
               id="Food description"
               name="Food description"
-              defaultValue="List of ingredients..."
             />
           </div>
           <Label htmlFor="Food image">Food Image</Label>
