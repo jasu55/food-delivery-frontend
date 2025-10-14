@@ -3,9 +3,10 @@ import { CreateFoodDialog } from "./_components/CreateFoodDialog";
 import { Button } from "@/components/ui/button"; // Adjust the path if necessary
 import { AdminLayout } from "./AdminLayout";
 import { useEffect, useState } from "react";
+import { AddCategory } from "./_components/AddCategory";
 
 export default function Page() {
-  const [categories, setCategories] = useState<{ name: string }[]>([]);
+  const [categories, setCategories] = useState<{ categoryName: string }[]>([]);
 
   const getCategories = async () => {
     const result = await fetch("http://localhost:8080/api/categories", {
@@ -18,9 +19,9 @@ export default function Page() {
       throw new Error("Failed to fetch categories");
     }
     const responseData = await result.json();
-    const { data } = responseData;
-    setCategories(data.map((item: any) => ({ name: item.name })));
-    return data;
+    console.log("DATA", responseData);
+    const { category } = responseData;
+    setCategories(category);
   };
 
   useEffect(() => {
@@ -37,17 +38,23 @@ export default function Page() {
             Dishes category
           </div>
           <div className="mt-[16px] flex gap-2">
-            {categories.map((category, index) => (
+            {categories?.map((category, index) => (
               <Button
                 className="bg-white text-black rounded-full border-1 border-black "
                 key={index}
               >
-                {category.name}
+                {category.categoryName}
                 <p className="bg-black text-white rounded-full  px-2">
                   {categories.length}
                 </p>
               </Button>
             ))}
+            <button
+              onClick={AddCategory()}
+              className="w-[36px] h-[36px] rounded-full bg-red-500"
+            >
+              +
+            </button>
             <div>{CreateFoodDialog()}</div>
           </div>
         </div>

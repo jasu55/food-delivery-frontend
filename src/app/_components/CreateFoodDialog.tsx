@@ -18,7 +18,7 @@ export const CreateFoodDialog = () => {
   const [price, setPrice] = useState<number>();
 
   const addFoodHandler = () => {
-    fetch("http://localhost:3000/create-food", {
+    fetch("http://localhost:8080/create-food", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
