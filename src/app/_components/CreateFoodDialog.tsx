@@ -14,7 +14,7 @@ import { useState } from "react";
 
 export const CreateFoodDialog = () => {
   const [preview, setPreview] = useState<string | undefined>();
-  const [name, setName] = useState<string>("Type food name");
+  const [name, setName] = useState<string>("");
   const [price, setPrice] = useState<number>();
 
   const addFoodHandler = () => {
@@ -73,7 +73,7 @@ export const CreateFoodDialog = () => {
                 name="Food name"
                 value={name}
                 onChange={nameChangeHandler}
-                placeholder=""
+                placeholder="Enter food name..."
               />
             </div>
             <div className="w-full flex flex-col gap-2">

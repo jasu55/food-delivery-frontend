@@ -1,11 +1,22 @@
 "use client";
 import { useState } from "react";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogHeader,
+} from "@/components/ui/dialog";
+import { Label } from "@radix-ui/react-label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import getCategories from "@/app/page";
 
 export const CreateCategoryDialog = () => {
   const [categoryName, setCategoryName] = useState<string>("");
 
-  const addCategoryHandler = () => {
-    fetch("http://localhost:8080/create-category", {
+  const addCategory = async () => {
+    fetch("http://localhost:8080/api/categories", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -18,6 +29,7 @@ export const CreateCategoryDialog = () => {
       .then((data) => {
         console.log(data);
       });
+    await getCategories();
   };
 
   const categoryNameChangeHandler = (
@@ -27,20 +39,35 @@ export const CreateCategoryDialog = () => {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <label className="text-sm font-medium">Category Name</label>
-      <input
-        type="text"
-        value={categoryName}
-        onChange={categoryNameChangeHandler}
-        className="border border-gray-300 rounded-md p-2"
-      />
-      <button
-        onClick={addCategoryHandler}
-        className="bg-blue-500 text-white rounded-md p-2"
-      >
-        Add Category
-      </button>
+    <div className="flex w-full items-center gap-10">
+      <Dialog>
+        <DialogTrigger>
+          <div className="w-[36px] h-[36px] rounded-full bg-red-500 flex justify-center items-center text-white text-[20px] cursor-pointer">
+            +
+          </div>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add new category</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col  w-full  gap-4">
+            <Label htmlFor="Category name">Category Name</Label>
+            <Input
+              id="Category name"
+              name="Category name"
+              value={categoryName}
+              onChange={categoryNameChangeHandler}
+              placeholder="Type category name"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <Button className="w-[110px]" type="submit" onClick={addCategory}>
+              Add Category
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

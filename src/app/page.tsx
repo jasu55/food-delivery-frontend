@@ -3,7 +3,8 @@ import { CreateFoodDialog } from "./_components/CreateFoodDialog";
 import { Button } from "@/components/ui/button"; // Adjust the path if necessary
 import { AdminLayout } from "./AdminLayout";
 import { useEffect, useState } from "react";
-import { AddCategory } from "./_components/AddCategory";
+import { CreateCategoryDialog } from "./_components/CreateCategoryDialog";
+import { CategoryFoods } from "./_components/CategoryFoods";
 
 export default function Page() {
   const [categories, setCategories] = useState<{ categoryName: string }[]>([]);
@@ -49,15 +50,17 @@ export default function Page() {
                 </p>
               </Button>
             ))}
-            <button
-              onClick={AddCategory()}
-              className="w-[36px] h-[36px] rounded-full bg-red-500"
-            >
-              + xa
-            </button>
-            <div>{CreateFoodDialog()}</div>
+            <div>{CreateCategoryDialog()}</div>
+            {/* <div>{CreateFoodDialog()}</div> */}
           </div>
         </div>
+        {categories?.map(() => (
+          <CategoryFoods
+          // key={category.name}
+          // title={category.name}
+          // _id={category._id}
+          ></CategoryFoods>
+        ))}
       </AdminLayout>
     </div>
   );
