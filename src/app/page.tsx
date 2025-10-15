@@ -53,7 +53,7 @@ export default function Page() {
               onClick={AddCategory()}
               className="w-[36px] h-[36px] rounded-full bg-red-500"
             >
-              +
+              + xa
             </button>
             <div>{CreateFoodDialog()}</div>
           </div>
