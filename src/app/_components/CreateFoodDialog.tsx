@@ -19,27 +19,47 @@ export const CreateFoodDialog = ({
   categoryId: string;
   refetchFoods: () => Promise<void>;
 }) => {
-  const [preview, setPreview] = useState<string | undefined>();
+  const [image, setImage] = useState<string | undefined>();
   const [name, setName] = useState<string>("");
   const [price, setPrice] = useState<number>();
   const [ingredients, setIngredients] = useState<string>("");
   const [open, setOpen] = useState<boolean>(closed);
 
-  const addFoodHandler = () => {
-    fetch("http://localhost:8080/create-food", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        price,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
+  const addFoodHandler =async() => {
+
+    if (!name || !price || !image || !ingredients) {
+      alert("All fields are required");
+      return;
+    }
+
+    const form = new FormData();
+
+    form.append("name", name);
+    form.append("price", String(price));
+    form.append("image", image); // File object
+    form.append("ingredients", ingredients);
+    form.append("categoryId", categoryId);
+
+  try {
+      const response = await fetch("http://localhost:8080/api/food", {
+        method: "POST",
+        body: form,
       });
+
+      const data = await response.json();
+      if (response.ok) {
+        await refetchFoods();
+        setOpen(false);
+        setName("");
+        setPrice(0);
+        setImage(undefined);
+        setIngredients("");
+      } else {
+        alert(data.error || "Failed to create food");
+      }
+    } catch (error) {
+      alert("Failed to create food");
+    }
   };
 
   const nameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,15 +72,15 @@ export const CreateFoodDialog = ({
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-    const previewUrl = file ? URL.createObjectURL(file) : undefined;
-    setPreview(previewUrl);
+    const imageUrl = file ? URL.createObjectURL(file) : undefined;
+    setImage(imageUrl);
   }
 
   return (
     <div>
-      <Dialog>
-        <DialogTrigger>
-          <div className="flex flex-col gap-6 items-center h-[241px] w-[239px] border border-dashed border-red-500 rounded-lg justify-center">
+      <Dialog open={open} onOpenChange={setOpen} >
+        <DialogTrigger asChild>
+          <div onClick={()=>setOpen(true)} className="flex flex-col gap-6 items-center h-[241px] w-[239px] border border-dashed border-red-500 rounded-lg justify-center">
             <div className=" bg-red-500 text-white rounded-full h-[40px] w-[40px] flex items-center justify-center">
               +
             </div>
@@ -111,9 +131,9 @@ export const CreateFoodDialog = ({
               className="opacity-0 absolute inset-0 z-2"
               onChange={handleFileChange}
             />
-            {preview && (
+            {image && (
               <img
-                src={preview as string}
+                src={image as string}
                 alt="Preview"
                 className="absolute inset-0 w-full h-full object-cover"
               />

@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { CreateCategoryDialog } from "./_components/CreateCategoryDialog";
 import { Badge } from "@/components/ui/badge"; // Adjust the path if necessary
 import { CategorizedFoods } from "./_components/CategorizedFoods";
+import { CategoryType } from "@/lib/types/types";
+
 
 export default function Page() {
   const [categories, setCategories] = useState<
@@ -14,7 +16,7 @@ export default function Page() {
   const [foods, setFoods] = useState<any[]>([]);
 
   const getFoods = async () => {
-    const result = await fetch("http://localhost:4000/api/food");
+    const result = await fetch("http://localhost:8080/api/food");
     const responseData = await result.json();
     setFoods(responseData.data);
   };
@@ -73,7 +75,6 @@ export default function Page() {
     getFoods();
   }, []);
 
-  console.log(categories);
 
   return (
     <div className="h-screen w-screen bg-gray-100">

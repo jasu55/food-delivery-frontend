@@ -2,7 +2,7 @@ export type FoodType = {
   _id?: string;
   name: string;
   ingredients: string;
-  image: string;
+  imageUrl: string;
   price: number;
   categoryId: string;
 };
