@@ -11,7 +11,7 @@ export const CategorizedFoods = ({
   refetchFoods: () => Promise<void>;
 }) => {
   return (
-    <div className=" border border-2 p-4 rounded-lg bg-white">
+    <div className=" border-2 p-4 rounded-lg bg-white">
       <h2>{category.name}</h2>
       <div className="flex flex-wrap gap-2">
         <CreateFoodDialog

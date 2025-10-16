@@ -6,14 +6,13 @@ import { useEffect, useState } from "react";
 import { CreateCategoryDialog } from "./_components/CreateCategoryDialog";
 import { Badge } from "@/components/ui/badge"; // Adjust the path if necessary
 import { CategorizedFoods } from "./_components/CategorizedFoods";
-import { CategoryType } from "@/lib/types/types";
-
+import { CategoryType, FoodType } from "@/lib/types/types";
 
 export default function Page() {
   const [categories, setCategories] = useState<
     { categoryName: string; _id: string }[]
   >([]);
-  const [foods, setFoods] = useState<any[]>([]);
+  const [foods, setFoods] = useState<FoodType[]>([]);
 
   const getFoods = async () => {
     const result = await fetch("http://localhost:8080/api/food");
@@ -75,7 +74,6 @@ export default function Page() {
     getFoods();
   }, []);
 
-
   return (
     <div className="h-screen w-screen bg-gray-100">
       <AdminLayout>
@@ -111,7 +109,7 @@ export default function Page() {
               <CategorizedFoods
                 key={category._id}
                 refetchFoods={() => getFoods()}
-                category={category}
+                category={{ name: category.categoryName, _id: category._id }}
                 foods={foods.filter(
                   (food) => food.categoryId._id == category._id
                 )}
