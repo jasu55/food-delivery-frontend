@@ -12,10 +12,18 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 
-export const CreateFoodDialog = () => {
+export const CreateFoodDialog = ({
+  categoryId,
+  refetchFoods,
+}: {
+  categoryId: string;
+  refetchFoods: () => Promise<void>;
+}) => {
   const [preview, setPreview] = useState<string | undefined>();
   const [name, setName] = useState<string>("");
   const [price, setPrice] = useState<number>();
+  const [ingredients, setIngredients] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(closed);
 
   const addFoodHandler = () => {
     fetch("http://localhost:8080/create-food", {

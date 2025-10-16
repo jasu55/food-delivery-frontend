@@ -10,26 +10,37 @@ import {
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import getCategories from "@/app/page";
 
-export const CreateCategoryDialog = () => {
+export const CreateCategoryDialog = ({
+  getCategories,
+}: {
+  getCategories: () => void;
+}) => {
   const [categoryName, setCategoryName] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
 
   const addCategory = async () => {
-    fetch("http://localhost:8080/api/categories", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        categoryName,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-      });
-    await getCategories();
+    try {
+      fetch("http://localhost:8080/api/categories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          categoryName,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+        });
+      alert("Category added successfully!");
+      setOpen(false);
+      setCategoryName("");
+      getCategories();
+    } catch (error) {
+      console.error("Error adding category:", error);
+    }
   };
 
   const categoryNameChangeHandler = (
@@ -40,7 +51,7 @@ export const CreateCategoryDialog = () => {
 
   return (
     <div className="flex w-full items-center gap-10">
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger>
           <div className="w-[36px] h-[36px] rounded-full bg-red-500 flex justify-center items-center text-white text-[20px] cursor-pointer">
             +
@@ -62,7 +73,12 @@ export const CreateCategoryDialog = () => {
           </div>
 
           <div className="flex justify-end">
-            <Button className="w-[110px]" type="submit" onClick={addCategory}>
+            <Button
+              disabled={!categoryName}
+              className="w-[110px]"
+              type="submit"
+              onClick={addCategory}
+            >
               Add Category
             </Button>
           </div>
