@@ -74,6 +74,8 @@ export default function Page() {
     getFoods();
   }, []);
 
+  console.log("FOODS!!!", foods);
+
   return (
     <div className="h-screen w-screen bg-gray-100">
       <AdminLayout>

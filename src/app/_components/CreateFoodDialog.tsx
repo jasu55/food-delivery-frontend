@@ -19,14 +19,15 @@ export const CreateFoodDialog = ({
   categoryId: string;
   refetchFoods: () => Promise<void>;
 }) => {
-  const [image, setImage] = useState<string | undefined>();
+  const [image, setImage] = useState<File | undefined>();
   const [name, setName] = useState<string>("");
+  const [imagePrev, setImagePrev] = useState<string>("");
   const [price, setPrice] = useState<number>();
   const [ingredients, setIngredients] = useState<string>("");
   const [open, setOpen] = useState<boolean>(closed);
 
-  const addFoodHandler =async() => {
-
+  const addFoodHandler = async () => {
+    console.log({ name, price, image, ingredients, categoryId });
     if (!name || !price || !image || !ingredients) {
       alert("All fields are required");
       return;
@@ -40,7 +41,7 @@ export const CreateFoodDialog = ({
     form.append("ingredients", ingredients);
     form.append("categoryId", categoryId);
 
-  try {
+    try {
       const response = await fetch("http://localhost:8080/api/food", {
         method: "POST",
         body: form,
@@ -70,17 +71,27 @@ export const CreateFoodDialog = ({
     setPrice(Number(e.target.value));
   };
 
+  const ingredientsChangeHandler = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setIngredients(e.target.value);
+  };
+
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
+    setImage(file);
     const imageUrl = file ? URL.createObjectURL(file) : undefined;
-    setImage(imageUrl);
+    setImagePrev(imageUrl || "");
   }
 
   return (
     <div>
-      <Dialog open={open} onOpenChange={setOpen} >
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <div onClick={()=>setOpen(true)} className="flex flex-col gap-6 items-center h-[241px] w-[239px] border border-dashed border-red-500 rounded-lg justify-center">
+          <div
+            onClick={() => setOpen(true)}
+            className="flex flex-col gap-6 items-center h-[241px] w-[239px] border border-dashed border-red-500 rounded-lg justify-center"
+          >
             <div className=" bg-red-500 text-white rounded-full h-[40px] w-[40px] flex items-center justify-center">
               +
             </div>
@@ -122,6 +133,8 @@ export const CreateFoodDialog = ({
               placeholder="List ingredients..."
               id="Food description"
               name="Food description"
+              value={ingredients}
+              onChange={ingredientsChangeHandler}
             />
           </div>
           <Label htmlFor="Food image">Food Image</Label>
@@ -133,7 +146,7 @@ export const CreateFoodDialog = ({
             />
             {image && (
               <img
-                src={image as string}
+                src={imagePrev}
                 alt="Preview"
                 className="absolute inset-0 w-full h-full object-cover"
               />
