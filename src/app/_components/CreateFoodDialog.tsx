@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 export const CreateFoodDialog = ({
   categoryId,
@@ -21,7 +21,6 @@ export const CreateFoodDialog = ({
 }) => {
   const [image, setImage] = useState<File | undefined>();
   const [name, setName] = useState<string>("");
-  const [imagePrev, setImagePrev] = useState<string>("");
   const [price, setPrice] = useState<number>();
   const [ingredients, setIngredients] = useState<string>("");
   const [open, setOpen] = useState<boolean>(closed);
@@ -63,26 +62,20 @@ export const CreateFoodDialog = ({
     }
   };
 
-  const nameChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const nameChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
-
-  const priceChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const priceChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setPrice(Number(e.target.value));
   };
-
-  const ingredientsChangeHandler = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
+  const fileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImage(e.target.files[0]);
+    }
+  };
+  const ingredientsChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setIngredients(e.target.value);
   };
-
-  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    setImage(file);
-    const imageUrl = file ? URL.createObjectURL(file) : undefined;
-    setImagePrev(imageUrl || "");
-  }
 
   return (
     <div>
@@ -129,7 +122,7 @@ export const CreateFoodDialog = ({
           </div>
           <div className="w-full flex flex-col gap-2">
             <Label htmlFor="Food description">Ingredients</Label>
-            <Textarea
+            <Input
               placeholder="List ingredients..."
               id="Food description"
               name="Food description"
@@ -138,29 +131,7 @@ export const CreateFoodDialog = ({
             />
           </div>
           <Label htmlFor="Food image">Food Image</Label>
-          <div className="relative cursor-pointer bg-gray-100 h-[240px] overflow-hidden rounded-md">
-            <input
-              type="file"
-              className="opacity-0 absolute inset-0 z-2"
-              onChange={handleFileChange}
-            />
-            {image && (
-              <img
-                src={imagePrev}
-                alt="Preview"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            )}
-            <div className="border border-dashed border-blue-300 bg-gray-100 rounded-md p-2 flex flex-col items-center justify-center gap-4 w-full h-full">
-              <div>
-                <img
-                  className="w-[40px] rounded-full"
-                  src="https://static.vecteezy.com/system/resources/previews/056/202/171/non_2x/add-image-or-photo-icon-vector.jpg"
-                />
-              </div>
-              <h1>Choose a file or drag & drop it here</h1>
-            </div>
-          </div>
+          <Input id="picture" type="file" onChange={fileChangeHandler} />
           <div className="flex justify-end">
             <Button className="w-[93px]" type="submit" onClick={addFoodHandler}>
               Add Dish
